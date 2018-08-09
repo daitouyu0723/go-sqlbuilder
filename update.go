@@ -31,6 +31,10 @@ type UpdateBuilder struct {
 	table       string
 	assignments []string
 	whereExprs  []string
+	orderByCols []string
+	order       string
+	limit       int
+	offset      int
 
 	args *Args
 }
@@ -50,6 +54,36 @@ func (ub *UpdateBuilder) Set(assignment ...string) *UpdateBuilder {
 // Where sets expressions of WHERE in UPDATE.
 func (ub *UpdateBuilder) Where(andExpr ...string) *UpdateBuilder {
 	ub.whereExprs = append(ub.whereExprs, andExpr...)
+	return ub
+}
+
+// OrderBy sets columns of ORDER BY in UPDATE.
+func (ub *UpdateBuilder) OrderBy(col ...string) *UpdateBuilder {
+	ub.orderByCols = EscapeAll(col...)
+	return ub
+}
+
+// Asc sets order of ORDER BY to ASC.
+func (ub *UpdateBuilder) Asc() *UpdateBuilder {
+	ub.order = "ASC"
+	return ub
+}
+
+// Desc sets order of ORDER BY to DESC.
+func (ub *UpdateBuilder) Desc() *UpdateBuilder {
+	ub.order = "DESC"
+	return ub
+}
+
+// Limit sets the LIMIT in UPDATE.
+func (ub *UpdateBuilder) Limit(limit int) *UpdateBuilder {
+	ub.limit = limit
+	return ub
+}
+
+// Offset sets the LIMIT offset in UPDATE.
+func (ub *UpdateBuilder) Offset(offset int) *UpdateBuilder {
+	ub.offset = offset
 	return ub
 }
 
